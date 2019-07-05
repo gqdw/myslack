@@ -1,17 +1,20 @@
 package myslack
 
 import (
-	"fmt"
 	"github.com/nlopes/slack"
 	"log"
 	"os"
 )
 
 var SLACKTOKEN string
+var CHANNELID string
 
 func init() {
 	SLACKTOKEN = os.Getenv("SLACKTOKEN")
+}
 
+func SetChannel(channelId string) {
+	CHANNELID = channelId
 }
 
 //func main() {
@@ -23,12 +26,12 @@ func SendMessage(message string) bool {
 	}
 	api := slack.New(SLACKTOKEN)
 
-	channelID, timestamp, err := api.PostMessage("nodenotify", slack.MsgOptionText(message, false))
+	channelID, timestamp, err := api.PostMessage(CHANNELID, slack.MsgOptionText(message, false))
 	if err != nil {
-		fmt.Printf("%s\n", err)
+		log.Printf("%s\n", err)
 		return false
 	}
-	fmt.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	log.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
 	return true
 
 }
