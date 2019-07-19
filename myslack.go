@@ -27,8 +27,8 @@ func init() {
 //	slackToken = token
 //}
 
-func SetChannel(channelId string) {
-	channelId = channelId
+func SetChannel(cid string) {
+	channelId = cid
 }
 
 //func main() {
