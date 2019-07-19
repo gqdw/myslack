@@ -6,22 +6,29 @@ import (
 	"os"
 )
 
-var SLACKTOKEN string
-var CHANNELID string
-var SlackClient *slack.Client
+//var SLACKTOKEN string
+var slackToken string
+
+//var CHANNELID string
+var channelId string
+var slackClient *slack.Client
 
 func init() {
-	SLACKTOKEN = os.Getenv("SLACKTOKEN")
+	slackToken = os.Getenv("SLACKTOKEN")
 	// 没有token就退出。
-	if SLACKTOKEN == "" {
+	if slackToken == "" {
 		log.Fatalln("cannot get SLACKTOKEN from env.!")
 	}
 
-	SlackClient = slack.New(SLACKTOKEN)
+	slackClient = slack.New(slackToken)
 }
 
+//func SetToken(token string){
+//	slackToken = token
+//}
+
 func SetChannel(channelId string) {
-	CHANNELID = channelId
+	channelId = channelId
 }
 
 //func main() {
@@ -29,17 +36,19 @@ func SetChannel(channelId string) {
 func SendMessage(message string) bool {
 	// 判断SLACKTOKEN是否为空
 	// 判断CHANNELID是否为空
-	if CHANNELID == "" {
+	if channelId == "" {
 		log.Println("cannot get CHANNELID from SetChannel().")
 		return false
 	}
 
-	channelID, timestamp, err := SlackClient.PostMessage(CHANNELID, slack.MsgOptionText(message, false))
+	channelID, _, err := slackClient.PostMessage(channelId, slack.MsgOptionText(message, false))
 	if err != nil {
 		log.Printf("%s\n", err)
 		return false
 	}
-	log.Printf("Message successfully sent to channel %s at %s", channelID, timestamp)
+	//i,_ := strconv.ParseInt(timestamp,10,64)
+	//tm := time.Unix(i,0)
+	log.Printf("Message successfully sent to channel %s at %s", channelID)
 	return true
 
 }
