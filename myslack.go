@@ -48,7 +48,7 @@ func SendMessage(message string) bool {
 	}
 	//i,_ := strconv.ParseInt(timestamp,10,64)
 	//tm := time.Unix(i,0)
-	log.Printf("Message successfully sent to channel %s at %s", channelID)
+	log.Printf("Message successfully sent to channel %s.", channelID)
 	return true
 
 }
