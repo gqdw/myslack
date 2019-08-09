@@ -4,6 +4,7 @@ import "github.com/gqdw/myslack"
 
 func main() {
 
-	myslack.SetChannel("project1")
-	myslack.SendMessage("test1")
+	ms := myslack.NewDefaultTokenFromEnv("project1")
+	//myslack.SetChannel("project1")
+	ms.SendMessage("test1")
 }
