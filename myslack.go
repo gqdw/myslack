@@ -12,6 +12,10 @@ type MySlackClient struct {
 	channelId   string
 }
 
+func New(channelId string) MySlackClient {
+	return NewDefaultTokenFromEnv(channelId)
+}
+
 func NewDefaultTokenFromEnv(channelId string) MySlackClient {
 	log.SetPrefix("[NewDefaultTokenFromEnv()]")
 	defer log.SetPrefix("")
