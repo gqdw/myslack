@@ -25,6 +25,11 @@ func NewDefaultTokenFromEnv(channelId string) MySlackClient {
 	ret.slackClient = slack.New(ret.slackToken)
 	return ret
 }
+func NewTokenFromArg(channelId string, token string) MySlackClient {
+	ret := MySlackClient{slackToken: token, channelId: channelId}
+	ret.slackClient = slack.New(ret.slackToken)
+	return ret
+}
 
 // func SendMessage ,成功返回true, 失败返回false
 func (client *MySlackClient) SendMessage(message string) bool {
