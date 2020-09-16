@@ -18,15 +18,28 @@ func New(channelId string) MySlackClient {
 	return NewDefaultTokenFromEnv(channelId)
 }
 
+// new func NewWithLogger for pass logger into func
+func NewWithLogger(logger log.Logger, channelId string) MySlackClient {
+	return NewDefaultTokenFromEnvWithLogger(logger, channelId)
+}
+
 func NewDefaultTokenFromEnv(channelId string) MySlackClient {
 	slackToken := os.Getenv("SLACKTOKEN")
 	ret := MySlackClient{slackToken: slackToken, channelId: channelId, Logger: log.NewLogfmtLogger(os.Stdout)}
 	ret.slackClient = slack.New(ret.slackToken)
 	ret.Logger = log.With(ret.Logger, "ts", log.DefaultTimestamp, "caller", log.DefaultCaller)
 	ret.Logger.Log("slackToken", slackToken)
-	//fmt.Println("slackToken",slackToken)
 	return ret
 }
+
+func NewDefaultTokenFromEnvWithLogger(logger log.Logger, channelId string) MySlackClient {
+	slackToken := os.Getenv("SLACKTOKEN")
+	ret := MySlackClient{slackToken: slackToken, channelId: channelId, Logger: logger}
+	ret.slackClient = slack.New(ret.slackToken)
+	ret.Logger.Log("slackToken", slackToken)
+	return ret
+}
+
 func NewTokenFromArg(channelId string, token string) MySlackClient {
 	ret := MySlackClient{slackToken: token, channelId: channelId}
 	ret.slackClient = slack.New(ret.slackToken)
