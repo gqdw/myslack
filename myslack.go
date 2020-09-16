@@ -1,8 +1,8 @@
 package myslack
 
 import (
+	"github.com/go-kit/kit/log"
 	"github.com/nlopes/slack"
-	"log"
 	"os"
 )
 
@@ -10,19 +10,21 @@ type MySlackClient struct {
 	slackClient *slack.Client
 	slackToken  string
 	channelId   string
+	Logger      log.Logger
 }
 
+// New == NewDefaultTokenFromEnv
 func New(channelId string) MySlackClient {
 	return NewDefaultTokenFromEnv(channelId)
 }
 
 func NewDefaultTokenFromEnv(channelId string) MySlackClient {
-	log.SetPrefix("[NewDefaultTokenFromEnv()]")
-	defer log.SetPrefix("")
 	slackToken := os.Getenv("SLACKTOKEN")
-	log.Println("get key from env:", slackToken)
-	ret := MySlackClient{slackToken: slackToken, channelId: channelId}
+	ret := MySlackClient{slackToken: slackToken, channelId: channelId, Logger: log.NewLogfmtLogger(os.Stdout)}
 	ret.slackClient = slack.New(ret.slackToken)
+	ret.Logger = log.With(ret.Logger, "ts", log.DefaultTimestamp, "caller", log.DefaultCaller)
+	ret.Logger.Log("slackToken", slackToken)
+	//fmt.Println("slackToken",slackToken)
 	return ret
 }
 func NewTokenFromArg(channelId string, token string) MySlackClient {
@@ -33,23 +35,13 @@ func NewTokenFromArg(channelId string, token string) MySlackClient {
 
 // func SendMessage ,成功返回true, 失败返回false
 func (client *MySlackClient) SendMessage(message string) bool {
-	log.SetPrefix("[SendMessage()]")
-	defer log.SetPrefix("")
-	//for debug
-	//log.Println("slackToken:", slackToken)
-	// 判断SLACKTOKEN是否为空
-	// 判断CHANNELID是否为空
-	//if channelId == "" {
-	//	log.Println("cannot get CHANNELID from SetChannel().")
-	//	return false
-	//}
 
 	channelID, _, err := client.slackClient.PostMessage(client.channelId, slack.MsgOptionText(message, false))
 	if err != nil {
-		log.Printf("SendMessage() failed: %s\n", err)
+		client.Logger.Log("SendMessage() failed", err)
 		return false
 	}
-	log.Printf("Message successfully sent to channel: %s. Message: %s\n", channelID, message)
+	client.Logger.Log("Message successfully sent to channel", channelID, "Message", message)
 	return true
 
 }
