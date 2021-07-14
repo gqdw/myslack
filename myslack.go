@@ -3,13 +3,13 @@ package myslack
 import "github.com/slack-go/slack"
 
 type MySlack struct {
-	token string
+	Token string
 	//chanId string
 	client *slack.Client
 }
 
 func (ms *MySlack) Init() {
-	ms.client = slack.New(ms.token)
+	ms.client = slack.New(ms.Token)
 }
 
 func (ms MySlack) SendMsg(chanId string, msg string) {
