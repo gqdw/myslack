@@ -1,4 +1,4 @@
-package main
+package myslack
 
 import "github.com/slack-go/slack"
 
