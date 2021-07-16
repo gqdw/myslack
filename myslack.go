@@ -12,7 +12,8 @@ func (ms *MySlack) Init() {
 	ms.client = slack.New(ms.Token)
 }
 
-func (ms MySlack) SendMsg(chanId string, msg string) {
-	ms.client.PostMessage(chanId, slack.MsgOptionAsUser(true),
+func (ms MySlack) SendMsg(chanId string, msg string) error {
+	_, _, ans := ms.client.PostMessage(chanId, slack.MsgOptionAsUser(true),
 		slack.MsgOptionText(msg, false))
+	return ans
 }
